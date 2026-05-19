@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LokalKarya - Pasar Digital UMKM & Kerajinan Nusantara</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b45309;
+        }
+        .badge-animation {
+            animation: ping 1s cubic-bezier(0, 0, 0.2, 1) once;
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .pulse-subtle {
+            animation: pulse-subtle 3s infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-amber-700 text-white text-xs sm:text-sm font-medium py-2 px-4 text-center relative z-20 shadow-inner">
+        <span class="inline-flex items-center gap-2">
+            <i class="fa-solid fa-bullhorn animate-bounce text-amber-300"></i>
+            <span>Bangga Buatan Indonesia! Diskon Ongkir s/d Rp 20.000 ke Seluruh Nusantara dengan kode: <strong class="bg-amber-600 px-2 py-0.5 rounded border border-amber-500 font-bold">LOKALJUARA</strong></span>
+        </span>
+    </div>
+
+    <!-- Main Navigation -->
+    <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4 sm:gap-8">
+                
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center gap-3 group shrink-0">
+                    <div class="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 rounded-xl flex items-center justify-center text-white shadow-md shadow-amber-600/30 group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid fa-store text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-amber-700 via-amber-600 to-orange-600 bg-clip-text text-transparent block leading-none">
+                            LokalKarya
+                        </span>
+                        <span class="text-xs font-semibold text-amber-800/70 tracking-wider uppercase mt-1 block">Pasar UMKM Nusantara</span>
+                    </div>
+                </a>
+
+                <!-- Search Bar (Desktop) -->
+                <div class="hidden md:flex flex-1 max-w-2xl relative items-center">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <input type="text" id="searchInput" placeholder="Cari kopi gayo, batik tulis, anyaman bambu, atau nama UMKM..." 
+                        class="w-full pl-11 pr-24 py-3 bg-slate-100 hover:bg-slate-200/70 focus:bg-white text-slate-800 rounded-full text-sm font-medium transition-all duration-200 outline-none border border-transparent focus:border-amber-500 focus:shadow-md focus:shadow-amber-500/10">
+                    <button id="btnSearch" class="absolute right-1.5 px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-sm">
+                        Cari
+                    </button>
+                </div>
+
+                <!-- Nav Actions -->
+                <div class="flex items-center gap-3 sm:gap-5">
+                    <!-- Wishlist Button -->
+                    <button id="btnWishlistNav" class="relative p-2.5 text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-full transition-colors relative group" title="Daftar Keinginan">
+                        <i class="fa-regular fa-heart text-xl"></i>
+                        <span id="wishlistCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 transition-transform duration-300 shadow-sm">0</span>
+                    </button>
+
+                    <!-- Cart Button -->
+                    <button id="btnCartToggle" class="relative p-2.5 bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-full transition-all duration-300 flex items-center gap-2 px-3 sm:px-4 shadow-sm border border-amber-200/60 group" title="Keranjang Belanja">
+                        <i class="fa-solid fa-cart-shopping text-lg group-hover:rotate-12 transition-transform duration-300 text-amber-600"></i>
+                        <span id="cartTotalNav" class="text-sm font-bold hidden sm:inline">Rp 0</span>
+                        <span id="cartBadgeCount" class="absolute -top-1.5 -right-1.5 bg-amber-600 text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-5 h-5 flex items-center justify-center shadow-md animate-none">0</span>
+                    </button>
+
+                    <!-- Join Mitra UMKM Button -->
+                    <button id="btnDaftarMitraNav" class="hidden lg:flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-semibold text-sm px-4 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 hover:shadow-lg hover:shadow-emerald-600/30 transition-all duration-200">
+                        <i class="fa-solid fa-handshake"></i>
+                        <span>Daftar UMKM</span>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="btnMobileMenu" class="md:hidden p-2.5 text-slate-600 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition-colors">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Mobile Search & Quick Nav -->
+            <div class="md:hidden pb-4 pt-2 flex items-center gap-2">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                    </div>
+                    <input type="text" id="searchInputMobile" placeholder="Cari produk UMKM lokal..." 
+                        class="w-full pl-9 pr-4 py-2.5 bg-slate-100 focus:bg-white text-slate-800 rounded-xl text-sm font-medium transition-all duration-200 outline-none border border-transparent focus:border-amber-500 shadow-inner">
+                </div>
+                <button id="btnDaftarMitraMobile" class="bg-emerald-600 text-white p-2.5 rounded-xl text-sm font-semibold flex items-center justify-center shrink-0 shadow-md">
+                    <i class="fa-solid fa-handshake"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Notification Toast Container -->
+    <div id="toastContainer" class="fixed top-24 right-4 z-50 flex flex-col gap-3 max-w-sm w-full pointer-events-none px-4"></div>
+
+    <!-- Hero Banner Section -->
+    <section class="relative overflow-hidden bg-slate-900 text-white pt-8 pb-20 md:py-28 lg:py-32">
+        <!-- Background Decorative Elements -->
+        <div class="absolute inset-0 opacity-25 mix-blend-overlay pointer-events-none bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1541888946425-d0fbb18f06f7?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-950/90 via-slate-900/95 to-slate-950/90"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-amber-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Hero Text -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-500/40 text-amber-300 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-md">
+                        <i class="fa-solid fa-certificate text-amber-400"></i>
+                        <span>100% Karya Asli Anak Bangsa</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                        Dukung <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-200">UMKM Lokal</span>, Berdayakan Ekonomi Nusantara.
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+                        Temukan ribuan produk unggulan hasil karya pengrajin, petani kopi, dan kreator kreatif dari Sabang sampai Merauke. Langsung dari tangan pertama.
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#productsSection" class="px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-slate-950 font-bold rounded-xl shadow-xl shadow-amber-500/20 transition-all duration-300 text-sm sm:text-base flex items-center gap-3 group">
+                            <span>Jelajahi Produk Lokal</span>
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <a href="#storySection" class="px-8 py-4 bg-slate-800/80 hover:bg-slate-800 text-white font-semibold rounded-xl border border-slate-700 transition-all duration-300 text-sm sm:text-base flex items-center gap-3 backdrop-blur-sm">
+                            <i class="fa-solid fa-book-open-reader text-amber-400"></i>
+                            <span>Kisah Inspiratif UMKM</span>
+                        </a>
+                    </div>
+
+                    <!-- Trust Stats -->
+                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-slate-800/80 max-w-lg mx-auto lg:mx-0">
+                        <div class="text-center lg:text-left">
+                            <span class="block text-2xl sm:text-3xl font-extrabold text-white">1,200+</span>
+                            <span class="text-xs sm:text-sm text-slate-400 font-medium">Mitra Terverifikasi</span>
+                        </div>
+                        <div class="text-center lg:text-left border-x border-slate-800/80 px-4">
+                            <span class="block text-2xl sm:text-3xl font-extrabold text-amber-400">100%</span>
+                            <span class="text-xs sm:text-sm text-slate-400 font-medium">Kualitas Premium</span>
+                        </div>
+                        <div class="text-center lg:text-left">
+                            <span class="block text-2xl sm:text-3xl font-extrabold text-white">34</span>
+                            <span class="text-xs sm:text-sm text-slate-400 font-medium">Provinsi Terwakili</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hero Interactive Cards / Banner Image -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        <!-- Main Card -->
+                        <div class="relative bg-white text-slate-900 rounded-3xl p-6 shadow-2xl border border-white/20 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+                            <div class="absolute -top-4 -right-4 bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-xs px-4 py-2 rounded-full shadow-lg uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-fire text-amber-200"></i>
+                                <span>Produk Terpopuler Minggu Ini</span>
+                            </div>
+
+                            <div class="overflow-hidden rounded-2xl mb-4 h-64 sm:h-80 bg-slate-100 relative group">
+                                <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80" alt="Kain Batik Lasem" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-4">
+                                    <div class="text-white">
+                                        <span class="bg-amber-600/90 backdrop-blur-sm text-[11px] font-bold px-2.5 py-1 rounded-md inline-block mb-1">Warisan Budaya</span>
+                                        <h3 class="text-lg font-bold leading-tight">Batik Tulis Halus Motif Tiga Negeri</h3>
+                                        <p class="text-xs text-slate-200 flex items-center gap-1.5 mt-1">
+                                            <i class="fa-solid fa-location-dot text-amber-400"></i>
+                                            <span>Griya Batik Lasem, Jawa Tengah</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-2">
+                                <div>
+                                    <span class="text-xs text-slate-500 font-medium line-through">Rp 550.000</span>
+                                    <span class="text-xl font-extrabold text-amber-800 block">Rp 450.000</span>
+                                </div>
+                                <button onclick="quickAddToCart(2)" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold rounded-xl shadow-md shadow-amber-600/20 hover:shadow-amber-600/40 transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                    <span>Beli Sekarang</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Floating Badge 1 -->
+                        <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex items-center gap-3 animate-bounce" style="animation-duration: 4s;">
+                            <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 text-2xl font-bold">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-900">Pembayaran Aman</h4>
+                                <p class="text-[11px] text-slate-500">QRIS & COD Tersedia</p>
+                            </div>
+                        </div>
+
+                        <!-- Floating Badge 2 -->
+                        <div class="absolute -top-6 -left-6 bg-amber-500 text-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 hidden sm:flex pulse-subtle">
+                            <i class="fa-solid fa-hand-holding-heart text-3xl text-amber-100"></i>
+                            <div>
+                                <span class="block text-sm font-black">Bantu UMKM Naik Kelas</span>
+                                <span class="text-[11px] text-amber-100">1 Transaksi = 1 Semangat</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Wavy Bottom shape -->
+        <div class="absolute bottom-0 left-0 right-0 overflow-hidden leading-none z-10 pointer-events-none">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="relative block w-full h-12 sm:h-16 text-slate-50 fill-current">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.06,151.71,130.8,223.84,105.5,257.73,93.6,290.54,71.2,321.39,56.44Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Why Us / Value Proposition -->
+    <section class="py-12 bg-slate-50 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4 hover:shadow-md transition-shadow duration-200">
+                    <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl font-bold shrink-0">
+                        <i class="fa-solid fa-medal"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base mb-1">Kurasi Ketat</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Produk UMKM telah lulus standar kualitas ekspor dan keaslian bahan lokal.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4 hover:shadow-md transition-shadow duration-200">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold shrink-0">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base mb-1">Harga Tangan Pertama</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Tanpa perantara, harga adil langsung mendukung kesejahteraan pengrajin.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4 hover:shadow-md transition-shadow duration-200">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-xl font-bold shrink-0">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base mb-1">Pengiriman Aman</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Dikemas rapi dengan pelindung standar pengiriman jauh ke seluruh Indonesia.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4 hover:shadow-md transition-shadow duration-200">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-xl font-bold shrink-0">
+                        <i class="fa-solid fa-headset"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base mb-1">Layanan Bantuan 24/7</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Tim dukungan pelanggan siap membantu pesanan Anda kapan saja via WhatsApp.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Filter Bar -->
+    <section class="py-8 bg-white border-y border-slate-200 shadow-sm sticky top-20 z-30 transition-all duration-300" id="filterSection">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-amber-600 text-white flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-900 tracking-tight">Kategori Produk</h2>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                    <span>Urutkan:</span>
+                    <select id="sortSelect" class="bg-slate-100 text-slate-800 py-1 px-2.5 rounded-lg border border-slate-200 font-medium focus:outline-none focus:border-amber-600">
+                        <option value="populer">Paling Populer</option>
+                        <option value="termurah">Harga Termurah</option>
+                        <option value="termahal">Harga Termahal</option>
+                        <option value="terbaru">Terbaru</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Category Buttons Carousel -->
+            <div class="flex items-center gap-2.5 overflow-x-auto pb-2 pt-1 no-scrollbar scroll-smooth" id="categoryContainer">
+                <button onclick="filterCategory('semua')" class="cat-btn active px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-amber-600 text-white shadow-md shadow-amber-600/20" data-cat="semua">
+                    <i class="fa-solid fa-border-all"></i>
+                    <span>Semua Kategori</span>
+                </button>
+                <button onclick="filterCategory('kuliner')" class="cat-btn px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700" data-cat="kuliner">
+                    <i class="fa-solid fa-utensils text-amber-600"></i>
+                    <span>Kuliner Khas</span>
+                </button>
+                <button onclick="filterCategory('kopi')" class="cat-btn px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700" data-cat="kopi">
+                    <i class="fa-solid fa-mug-hot text-amber-800"></i>
+                    <span>Kopi & Minuman</span>
+                </button>
+                <button onclick="filterCategory('fashion')" class="cat-btn px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700" data-cat="fashion">
+                    <i class="fa-solid fa-shirt text-orange-600"></i>
+                    <span>Fashion & Tenun</span>
+                </button>
+                <button onclick="filterCategory('kriya')" class="cat-btn px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700" data-cat="kriya">
+                    <i class="fa-solid fa-toolbox text-amber-700"></i>
+                    <span>Kriya & Kerajinan</span>
+                </button>
+                <button onclick="filterCategory('herbal')" class="cat-btn px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700" data-cat="herbal">
+                    <i class="fa-solid fa-leaf text-emerald-600"></i>
+                    <span>Herbal & Perawatan</span>
+                </button>
+            </div>
+
+            <!-- Region Filter Pill Sub-bar -->
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center gap-3 overflow-x-auto text-xs">
+                <span class="font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot text-amber-600"></i>
+                    <span>Daerah Asal:</span>
+                </span>
+                <div class="flex items-center gap-1.5" id="regionContainer">
+                    <button onclick="filterRegion('semua')" class="reg-btn active px-3 py-1 rounded-full font-medium bg-slate-900 text-white" data-reg="semua">Semua Daerah</button>
+                    <button onclick="filterRegion('Sumatera')" class="reg-btn px-3 py-1 rounded-full font-medium bg-slate-100 hover:bg-slate-200 text-slate-600" data-reg="Sumatera">Sumatera</button>
+                    <button onclick="filterRegion('Jawa')" class="reg-btn px-3 py-1 rounded-full font-medium bg-slate-100 hover:bg-slate-200 text-slate-600" data-reg="Jawa">Jawa</button>
+                    <button onclick="filterRegion('Bali-Nusa')" class="reg-btn px-3 py-1 rounded-full font-medium bg-slate-100 hover:bg-slate-200 text-slate-600" data-reg="Bali-Nusa">Bali & Nusa Tenggara</button>
+                    <button onclick="filterRegion('Sulawesi-Maluku')" class="reg-btn px-3 py-1 rounded-full font-medium bg-slate-100 hover:bg-slate-200 text-slate-600" data-reg="Sulawesi-Maluku">Sulawesi & Maluku</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Products Section -->
+    <section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1" id="productsSection">
+        <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+                    Katalog Karya Unggulan
+                </h2>
+                <p class="text-sm text-slate-500 mt-1" id="resultSummary">Menampilkan 12 produk lokal premium</p>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-400">Tampilan:</span>
+                <div class="bg-slate-200 p-1 rounded-lg flex items-center gap-1">
+                    <button id="btnGrid" class="p-1.5 bg-white rounded shadow-sm text-amber-600" title="Grid View"><i class="fa-solid fa-table-cells text-sm"></i></button>
+                    <button id="btnList" class="p-1.5 text-slate-600 hover:text-amber-600 rounded" title="List View"><i class="fa-solid fa-list text-sm"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="emptyState" class="hidden py-20 text-center max-w-md mx-auto">
+            <div class="w-24 h-24 bg-slate-200 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800">Produk Tidak Ditemukan</h3>
+            <p class="text-sm text-slate-500 mt-1">Maaf, tidak ada produk UMKM yang sesuai dengan pencarian atau filter Anda saat ini.</p>
+            <button onclick="resetFilters()" class="mt-6 px-6 py-2.5 bg-amber-600 text-white font-semibold rounded-xl text-sm shadow-md hover:bg-amber-700 transition-all">
+                Reset Semua Filter
+            </button>
+        </div>
+
+        <!-- Products Grid Container -->
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+            <!-- Dynamic products will be injected here via JavaScript -->
+        </div>
+    </section>
+
+    <!-- Artisan Spotlight / Story Section -->
+    <section class="py-16 bg-gradient-to-br from-amber-900 via-amber-800 to-amber-950 text-white relative overflow-hidden" id="storySection">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-amber-300 font-bold uppercase tracking-widest text-xs inline-block bg-amber-500/20 px-3 py-1 rounded-full border border-amber-500/30">Kisah di Balik Karya</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold mt-3 tracking-tight">Sosok Hebat Pahlawan UMKM Nusantara</h2>
+                <p class="text-slate-300 text-sm sm:text-base mt-3">Setiap produk memiliki jiwa dan cerita perjuangan. Kenali lebih dekat para pengrajin lokal yang melestarikan warisan leluhur kita.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Story 1 -->
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 flex flex-col justify-between hover:bg-white/15 transition-all duration-300 group">
+                    <div>
+                        <div class="relative overflow-hidden rounded-2xl mb-4 h-52">
+                            <img src="https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=600&q=80" alt="Ibu Ratna" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-amber-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Kopi & Teh</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">Mbah Sastro & Petani Kopi Gayo</h3>
+                        <span class="text-xs text-amber-300 font-semibold block mb-3"><i class="fa-solid fa-location-dot mr-1"></i> Bener Meriah, Aceh</span>
+                        <p class="text-sm text-slate-200 leading-relaxed italic line-clamp-4">
+                            "Kopi Gayo bukan sekadar minuman bagi kami, ini adalah tradisi turun-temurun. Bersama 40 petani lokal, kami merawat kebun kopi organik di dataran tinggi dengan penuh cinta demi cita rasa dunia."
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs text-slate-300">Produk Terjual: <strong>4.800+</strong></span>
+                        <button onclick="openStoryModal('sastro')" class="text-amber-300 hover:text-white font-bold text-xs flex items-center gap-1 group/btn">
+                            <span>Baca Kisah Lengkap</span>
+                            <i class="fa-solid fa-arrow-right group-hover/btn:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Story 2 -->
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 flex flex-col justify-between hover:bg-white/15 transition-all duration-300 group">
+                    <div>
+                        <div class="relative overflow-hidden rounded-2xl mb-4 h-52">
+                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80" alt="Batik Lasem" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Kriya & Tenun</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">Ibu Hartini - Griya Sekar Lasem</h3>
+                        <span class="text-xs text-amber-300 font-semibold block mb-3"><i class="fa-solid fa-location-dot mr-1"></i> Lasem, Rembang, Jawa Tengah</span>
+                        <p class="text-sm text-slate-200 leading-relaxed italic line-clamp-4">
+                            "Membatik adalah melukiskan doa pada selembar kain. Kami mempekerjakan ibu-ibu rumah tangga di desa untuk membantu perekonomian keluarga sekaligus menjaga kelestarian motif klasik perpaduan Tiongkok-Jawa."
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs text-slate-300">Produk Terjual: <strong>2.100+</strong></span>
+                        <button onclick="openStoryModal('hartini')" class="text-amber-300 hover:text-white font-bold text-xs flex items-center gap-1 group/btn">
+                            <span>Baca Kisah Lengkap</span>
+                            <i class="fa-solid fa-arrow-right group-hover/btn:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Story 3 -->
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/10 flex flex-col justify-between hover:bg-white/15 transition-all duration-300 group">
+                    <div>
+                        <div class="relative overflow-hidden rounded-2xl mb-4 h-52">
+                            <img src="https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?auto=format&fit=crop&w=600&q=80" alt="Anyaman" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Kerajinan Tangan</div>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">I Wayan Suasta - Rattan Ayu Bali</h3>
+                        <span class="text-xs text-amber-300 font-semibold block mb-3"><i class="fa-solid fa-location-dot mr-1"></i> Gianyar, Bali</span>
+                        <p class="text-sm text-slate-200 leading-relaxed italic line-clamp-4">
+                            "Berawal dari limbah rotan sisa industri mebel, kami olah kembali menjadi tas dan dekorasi bernilai seni tinggi. LokalKarya membantu kami menjangkau pembeli hingga ke Jepang dan Eropa."
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-xs text-slate-300">Produk Terjual: <strong>5.400+</strong></span>
+                        <button onclick="openStoryModal('suasta')" class="text-amber-300 hover:text-white font-bold text-xs flex items-center gap-1 group/btn">
+                            <span>Baca Kisah Lengkap</span>
+                            <i class="fa-solid fa-arrow-right group-hover/btn:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action Banner inside Story -->
+            <div class="mt-16 bg-gradient-to-r from-amber-600 to-orange-600 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-2xl"></div>
+                
+                <div class="max-w-xl text-center md:text-left relative z-10">
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white leading-tight">Punya Usaha UMKM atau Kerajinan Tangan Sendiri?</h3>
+                    <p class="text-amber-100 text-sm sm:text-base mt-2">Bergabunglah bersama ribuan mitra penjual lainnya. Nikmati gratis biaya pendaftaran, pendampingan digital marketing, dan akses pasar nasional.</p>
+                </div>
+
+                <div class="relative z-10 shrink-0">
+                    <button id="btnDaftarMitraBanner" class="px-8 py-4 bg-slate-900 hover:bg-black text-white font-bold rounded-2xl shadow-xl hover:scale-105 transition-all text-base flex items-center gap-3">
+                        <i class="fa-solid fa-user-plus text-amber-400"></i>
+                        <span>Daftar Jadi Mitra Penjual</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Testimonials / Ulasan Pembeli -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-xl mx-auto mb-12">
+                <span class="text-amber-600 font-bold text-xs uppercase tracking-wider bg-amber-50 px-3 py-1 rounded-full">Testimoni Pelanggan</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Apa Kata Mereka Tentang LokalKarya</h2>
+                <p class="text-slate-500 text-sm mt-2">Ribuan pembeli puas dengan kualitas produk UMKM Indonesia.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 relative">
+                    <div class="text-amber-500 flex gap-1 mb-3 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-700 text-sm italic mb-6">
+                        "Kopi Gayo dari Kopi Senggani benar-benar wangi dan fresh banget! Packingnya pakai kardus tebal dan bubble wrap, sampai Jakarta dalam kondisi mulus tanpa cacat. Bakal langganan terus!"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-600 rounded-full text-white font-bold flex items-center justify-center text-sm">
+                            AN
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Ahmad Nurhadi</h4>
+                            <span class="text-xs text-slate-500">Pembeli Terverifikasi • Jakarta Selatan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 relative">
+                    <div class="text-amber-500 flex gap-1 mb-3 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-700 text-sm italic mb-6">
+                        "Tas rotan Balinya sangat rapih anyamannya, tidak ada serat tajam. Kualitasnya juara dibanding beli di toko biasa. Senang bisa support langsung pengrajin di Gianyar."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-600 rounded-full text-white font-bold flex items-center justify-center text-sm">
+                            DM
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Dinda Maharani</h4>
+                            <span class="text-xs text-slate-500">Pembeli Terverifikasi • Surabaya</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 relative">
+                    <div class="text-amber-500 flex gap-1 mb-3 text-sm">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-700 text-sm italic mb-6">
+                        "Minyak Kemiri Herbalindo ampuh banget buat anak saya. Baunya herbal asli tanpa campuran kimia. Respon seller sangat cepat, pesan pagi sore sudah sampai via kurir instan."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-600 rounded-full text-white font-bold flex items-center justify-center text-sm">
+                            BP
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">Budi Prakoso</h4>
+                            <span class="text-xs text-slate-500">Pembeli Terverifikasi • Yogyakarta</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 bg-slate-100 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <span class="text-amber-600 font-bold text-xs uppercase tracking-wider bg-amber-100 px-3 py-1 rounded-full">FAQ</span>
+                <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Pertanyaan Seputar LokalKarya</h2>
+                <p class="text-slate-500 text-sm mt-1">Temukan jawaban atas pertanyaan yang sering diajukan</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 flex items-center justify-between cursor-pointer faq-toggle">
+                        <span>Bagaimana cara memesan produk di LokalKarya?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400"></i>
+                    </h3>
+                    <div class="faq-content text-slate-600 text-sm mt-3 pt-3 border-t border-slate-100 leading-relaxed">
+                        Anda bisa memilih produk yang diinginkan, klik tombol "Tambah ke Keranjang", lalu buka keranjang belanja Anda. Klik tombol Checkout untuk mengisi alamat pengiriman dan memilih metode pembayaran. Anda juga dapat menyelesaikan pesanan langsung terhubung via WhatsApp dengan mitra UMKM kami.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 flex items-center justify-between cursor-pointer faq-toggle">
+                        <span>Apakah produk dijamin keasliannya dan buatan lokal?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400"></i>
+                    </h3>
+                    <div class="faq-content text-slate-600 text-sm mt-3 pt-3 border-t border-slate-100 leading-relaxed hidden">
+                        Ya! Setiap UMKM yang mendaftar di LokalKarya harus melalui tahap verifikasi KTP, legalitas usaha (NIB/SKU), dan foto lokasi produksi nyata. Kami menggaransi 100% produk yang dijual adalah karya pengrajin atau produsen Indonesia.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 flex items-center justify-between cursor-pointer faq-toggle">
+                        <span>Metode pembayaran apa saja yang didukung?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400"></i>
+                    </h3>
+                    <div class="faq-content text-slate-600 text-sm mt-3 pt-3 border-t border-slate-100 leading-relaxed hidden">
+                        Kami menyediakan berbagai metode pembayaran aman seperti QRIS (mendukung semua aplikasi perbankan dan e-Wallet: GoPay, OVO, Dana), Bank Transfer Virtual Account (BCA, Mandiri, BRI, BNI), dan Bayar di Tempat (COD) untuk wilayah tertentu.
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-slate-900 flex items-center justify-between cursor-pointer faq-toggle">
+                        <span>Bagaimana cara mendaftar sebagai penjual/mitra UMKM?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400"></i>
+                    </h3>
+                    <div class="faq-content text-slate-600 text-sm mt-3 pt-3 border-t border-slate-100 leading-relaxed hidden">
+                        Klik tombol "Daftar UMKM" di bagian atas halaman atau pada banner di bawah. Isi formulir singkat mengenai nama usaha, produk unggulan, dan nomor WhatsApp aktif. Tim kurasi kami akan menghubungi Anda dalam kurun waktu maksimal 1x24 jam kerja.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white pt-16 pb-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800">
+                
+                <!-- Col 1: Brand Info -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">
+                            <i class="fa-solid fa-store"></i>
+                        </div>
+                        <span class="text-2xl font-extrabold tracking-tight text-white block">LokalKarya</span>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
+                        Platform e-commerce gotong royong yang mempertemukan kejeniusan pengrajin lokal Nusantara dengan pecinta produk berkualitas di seluruh penjuru negeri.
+                    </p>
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-whatsapp text-lg"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-youtube text-lg"></i></a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-amber-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"><i class="fa-brands fa-tiktok text-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Kategori -->
+                <div>
+                    <h4 class="font-bold text-white text-base mb-4 flex items-center gap-2 border-b border-amber-600/50 pb-2 inline-flex">Kategori Populer</h4>
+                    <ul class="space-y-2.5 text-sm text-slate-400">
+                        <li><a href="#" onclick="filterCategory('kuliner')" class="hover:text-amber-400 transition-colors">Kuliner & Camilan Khas</a></li>
+                        <li><a href="#" onclick="filterCategory('kopi')" class="hover:text-amber-400 transition-colors">Kopi Nusantara Premium</a></li>
+                        <li><a href="#" onclick="filterCategory('fashion')" class="hover:text-amber-400 transition-colors">Batik & Tenun Tradisional</a></li>
+                        <li><a href="#" onclick="filterCategory('kriya')" class="hover:text-amber-400 transition-colors">Kriya & Anyaman Rotan</a></li>
+                        <li><a href="#" onclick="filterCategory('herbal')" class="hover:text-amber-400 transition-colors">Perawatan & Herbal Organik</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Informasi & Bantuan -->
+                <div>
+                    <h4 class="font-bold text-white text-base mb-4 flex items-center gap-2 border-b border-amber-600/50 pb-2 inline-flex">Bantuan & Info</h4>
+                    <ul class="space-y-2.5 text-sm text-slate-400">
+                        <li><a href="#" class="hover:text-amber-400 transition-colors">Cara Pembelian</a></li>
+                        <li><a href="#" class="hover:text-amber-400 transition-colors">Lacak Pengiriman Pesanan</a></li>
+                        <li><a href="#" class="hover:text-amber-400 transition-colors">Syarat & Ketentuan Mitra</a></li>
+                        <li><a href="#" class="hover:text-amber-400 transition-colors">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="hover:text-amber-400 transition-colors">Hubungi CS LokalKarya</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Pembayaran & Kurir -->
+                <div>
+                    <h4 class="font-bold text-white text-base mb-4 flex items-center gap-2 border-b border-amber-600/50 pb-2 inline-flex">Keamanan & Pembayaran</h4>
+                    <p class="text-xs text-slate-400 mb-3 leading-relaxed">Didukung oleh sistem enkripsi standar keamanan tinggi.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-slate-800 text-xs px-2.5 py-1 rounded border border-slate-700 font-bold text-amber-400">QRIS</span>
+                        <span class="bg-slate-800 text-xs px-2.5 py-1 rounded border border-slate-700 font-bold text-blue-400">BCA</span>
+                        <span class="bg-slate-800 text-xs px-2.5 py-1 rounded border border-slate-700 font-bold text-orange-400">BNI</span>
+                        <span class="bg-slate-800 text-xs px-2.5 py-1 rounded border border-slate-700 font-bold text-blue-500">MANDIRI</span>
+                        <span class="bg-slate-800 text-xs px-2.5 py-1 rounded border border-slate-700 font-bold text-emerald-400">GOPAY</span>
+                        <span class="bg-slate-800 text-xs px-2.5 py-1 rounded border border-slate-700 font-bold text-purple-400">OVO</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <p>&copy; 2026 LokalKarya Nusantara. Semua Hak Dilindungi. Dibuat dengan bangga untuk UMKM Indonesia.</p>
+                <div class="flex items-center gap-4">
+                    <span>100% Cinta Produk Indonesia</span>
+                    <i class="fa-solid fa-heart text-red-500"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- MODAL: Shopping Cart Drawer -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-modal="true" role="dialog">
+        <!-- Backdrop -->
+        <div id="cartBackdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0 duration-300"></div>
+
+        <!-- Drawer Content -->
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div id="cartPanel" class="w-screen max-w-md bg-white shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
+                
+                <!-- Header -->
+                <div class="p-6 bg-slate-900 text-white flex items-center justify-between shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white">
+                            <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold">Keranjang Belanja</h2>
+                            <p id="cartItemCount" class="text-xs text-slate-300">0 Produk terpilih</p>
+                        </div>
+                    </div>
+                    <button id="btnCloseCart" class="p-2 text-slate-400 hover:text-white rounded-lg transition-colors">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Banner Diskon Ongkir -->
+                <div class="bg-amber-50 p-3 border-b border-amber-200 flex items-center justify-between text-xs text-amber-900 px-6 shrink-0">
+                    <span class="flex items-center gap-2 font-medium">
+                        <i class="fa-solid fa-receipt text-amber-600"></i>
+                        <span>Kode promo <strong>LOKALJUARA</strong> aktif!</span>
+                    </span>
+                    <span class="font-bold text-amber-700">-Rp 20.000</span>
+                </div>
+
+                <!-- Cart Items List / Empty State -->
+                <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-6 space-y-4">
+                    <!-- Items injected here -->
+                </div>
+
+                <!-- Cart Footer & Checkout Summary -->
+                <div id="cartFooter" class="p-6 border-t border-slate-200 bg-slate-50 shrink-0">
+                    <div class="space-y-2 mb-4 text-sm">
+                        <div class="flex justify-between text-slate-600">
+                            <span>Subtotal Produk</span>
+                            <span id="cartSubtotal">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between text-slate-600">
+                            <span>Diskon Voucher</span>
+                            <span class="text-emerald-600 font-medium">-Rp 20.000</span>
+                        </div>
+                        <div class="flex justify-between font-extrabold text-base text-slate-900 pt-2 border-t border-slate-200">
+                            <span>Total Pembayaran</span>
+                            <span id="cartGrandTotal" class="text-amber-800">Rp 0</span>
+                        </div>
+                    </div>
+                    <button id="btnProceedCheckout" class="w-full py-4 bg-amber-600 hover:bg-amber-700 text-white text-base font-bold rounded-xl shadow-lg shadow-amber-600/30 flex items-center justify-center gap-2 transition-all">
+                        <span>Lanjut ke Pembayaran</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL: Quick View Product Detail -->
+    <div id="modalQuickView" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div id="quickViewBackdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity opacity-0 duration-300"></div>
+        
+        <div id="quickViewContent" class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl relative z-10 transform scale-95 opacity-0 transition-all duration-300 max-h-[90vh] flex flex-col md:flex-row">
+            <button id="btnCloseQuickView" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-slate-100 hover:bg-amber-600 hover:text-white text-slate-700 flex items-center justify-center transition-colors shadow-sm">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- Product Image Left -->
+            <div class="md:w-1/2 bg-slate-100 relative overflow-hidden min-h-[300px] flex items-center justify-center">
+                <img id="qvImage" src="" alt="Product Image" class="w-full h-full object-cover max-h-[500px]">
+                <div id="qvBadge" class="absolute top-4 left-4 bg-amber-600 text-white font-bold text-xs px-3 py-1.5 rounded-full uppercase tracking-wider shadow"></div>
+            </div>
+
+            <!-- Product Details Right -->
+            <div class="md:w-1/2 p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
+                <div>
+                    <!-- UMKM Info -->
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span id="qvUmkm" class="text-xs font-bold text-slate-600 uppercase tracking-wider">Mitra UMKM</span>
+                        <span class="text-slate-300">•</span>
+                        <span id="qvRegion" class="text-xs text-amber-700 font-semibold flex items-center gap-1">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span id="qvRegionText">Daerah</span>
+                        </span>
+                    </div>
+
+                    <h2 id="qvTitle" class="text-2xl font-extrabold text-slate-900 leading-tight mb-2">Nama Produk</h2>
+                    
+                    <!-- Rating & Sold -->
+                    <div class="flex items-center gap-4 text-xs font-semibold text-slate-500 mb-4 pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-1 text-amber-500">
+                            <i class="fa-solid fa-star"></i>
+                            <span id="qvRating" class="font-bold text-slate-800">4.9</span>
+                        </div>
+                        <span>•</span>
+                        <span id="qvSold">Terjual 500+</span>
+                        <span>•</span>
+                        <span class="text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">Stok Tersedia</span>
+                    </div>
+
+                    <div class="mb-6">
+                        <span class="text-xs text-slate-400 font-medium">Harga Normal UMKM</span>
+                        <div class="text-3xl font-extrabold text-amber-800 mt-0.5" id="qvPrice">Rp 0</div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="space-y-3 mb-6">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Deskripsi Produk & Kualitas</h4>
+                        <p id="qvDescription" class="text-sm text-slate-600 leading-relaxed">
+                            Deskripsi rinci mengenai produk. Diproses dengan kehati-hatian menggunakan bahan alami terpilih dari alam Indonesia.
+                        </p>
+                    </div>
+
+                    <!-- Spesifikasi Singkat -->
+                    <div class="grid grid-cols-2 gap-3 p-4 bg-slate-50 rounded-2xl mb-6 text-xs text-slate-600 font-medium">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-check text-amber-600"></i>
+                            <span>100% Bahan Asli Lokal</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-check text-amber-600"></i>
+                            <span>Ramah Lingkungan</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-check text-amber-600"></i>
+                            <span>Dukungan Pengrajin</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-check text-amber-600"></i>
+                            <span>Garansi Pengiriman</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="space-y-3 pt-4 border-t border-slate-100">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center border border-slate-200 rounded-xl bg-slate-50 p-1 shrink-0">
+                            <button id="qvMinus" class="w-8 h-8 rounded-lg hover:bg-white flex items-center justify-center font-bold text-slate-600 transition-colors">-</button>
+                            <span id="qvQty" class="w-10 text-center font-bold text-sm text-slate-900">1</span>
+                            <button id="qvPlus" class="w-8 h-8 rounded-lg hover:bg-white flex items-center justify-center font-bold text-slate-600 transition-colors">+</button>
+                        </div>
+                        <button id="qvAddToCartBtn" class="flex-1 py-3.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-lg shadow-amber-600/20 text-sm flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Masukkan Keranjang</span>
+                        </button>
+                    </div>
+                    <button id="qvOrderWaBtn" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-emerald-600/20">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Order Langsung via WhatsApp UMKM</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MODAL: Checkout / Simulasi Pembayaran -->
+    <div id="modalCheckout" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div id="checkoutBackdrop" class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity opacity-0 duration-300"></div>
+        
+        <div id="checkoutContent" class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl relative z-10 p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-300 max-h-[90vh] overflow-y-auto">
+            <button id="btnCloseCheckout" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-amber-600 hover:text-white text-slate-700 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-amber-100 rounded-2xl text-amber-700 flex items-center justify-center text-2xl mx-auto mb-2 shadow-inner">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900">Formulir Pesanan & Pengiriman</h2>
+                <p class="text-xs text-slate-500 mt-1">Lengkapi data untuk proses pengiriman dari sentra UMKM</p>
+            </div>
+
+            <form id="checkoutForm" class="space-y-4" onsubmit="handleCheckoutSubmit(event)">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nama Penerima *</label>
+                        <input type="text" required placeholder="Contoh: Budi Santoso" class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-amber-600 focus:bg-white outline-none font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">No. WhatsApp Aktif *</label>
+                        <input type="tel" required placeholder="Contoh: 081234567890" class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-amber-600 focus:bg-white outline-none font-medium">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Alamat Pengiriman Lengkap *</label>
+                    <textarea rows="3" required placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota, Kode Pos" class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-amber-600 focus:bg-white outline-none font-medium"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Kurir Pengiriman</label>
+                        <select class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-amber-600 outline-none font-medium text-slate-800">
+                            <option>JNE Express Reguler - (Estimasi 2-3 Hari)</option>
+                            <option>J&T Express - (Estimasi 2-4 Hari)</option>
+                            <option>SiCepat REG - (Estimasi 1-3 Hari)</option>
+                            <option>GoSend / GrabExpress (Khusus Kota Sama)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Metode Pembayaran</label>
+                        <select id="paymentMethodSelect" class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-amber-600 outline-none font-medium text-slate-800" onchange="toggleQrisView()">
+                            <option value="qris">QRIS (GoPay, OVO, Dana, M-Banking)</option>
+                            <option value="transfer">Bank Transfer (Virtual Account BCA/Mandiri)</option>
+                            <option value="cod">Bayar di Tempat (COD) - Khusus Jawa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- QRIS Box Simulation -->
+                <div id="qrisBox" class="p-6 bg-slate-900 text-white rounded-2xl text-center space-y-3 shadow-lg relative overflow-hidden">
+                    <div class="absolute -right-12 -top-12 w-32 h-32 bg-amber-500/20 rounded-full blur-xl pointer-events-none"></div>
+                    <span class="bg-amber-500 text-slate-950 font-extrabold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider inline-block">QRIS Scan Otomatis</span>
+                    <h4 class="font-bold text-sm">Scan QRIS untuk Membayar</h4>
+                    <div class="w-40 h-40 bg-white p-3 rounded-xl mx-auto shadow-md flex items-center justify-center">
+                        <!-- Simulated QR Code using fontawesome grid or img -->
+                        <i class="fa-solid fa-qrcode text-slate-900 text-[120px]"></i>
+                    </div>
+                    <p class="text-xs text-amber-300 font-semibold">Total: <strong id="checkoutQrisAmount" class="text-base text-white">Rp 0</strong></p>
+                    <p class="text-[11px] text-slate-400">Verifikasi instan otomatis dalam 10 detik</p>
+                </div>
+
+                <!-- Bank Transfer Box -->
+                <div id="transferBox" class="p-5 bg-blue-50 text-blue-950 rounded-2xl space-y-2 hidden border border-blue-200">
+                    <div class="flex items-center gap-2 font-bold text-sm">
+                        <i class="fa-solid fa-building-columns text-blue-600"></i>
+                        <span>Transfer Virtual Account BCA</span>
+                    </div>
+                    <p class="text-xs text-blue-800 font-mono text-lg font-bold bg-white py-2 px-3 rounded-xl border border-blue-200 flex justify-between items-center">
+                        <span>80912-88192-3011</span>
+                        <button type="button" onclick="copyToClipboard('80912-88192-3011')" class="text-xs text-blue-600 hover:text-blue-900 underline font-sans">Salin</button>
+                    </p>
+                    <p class="text-[11px] text-blue-700">Atas Nama: PT PASAR UMKM NUSANTARA</p>
+                </div>
+
+                <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs text-slate-500 block">Total yang Harus Dibayar:</span>
+                        <span id="checkoutFinalTotal" class="text-2xl font-extrabold text-amber-800">Rp 0</span>
+                    </div>
+
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button type="button" onclick="checkoutViaWhatsApp()" class="flex-1 sm:flex-none px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-all shadow-md">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span>Pesan via WhatsApp</span>
+                        </button>
+                        <button type="submit" class="flex-1 sm:flex-none px-8 py-3.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-600/30">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span>Konfirmasi Pesanan</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL: Daftar Jadi Penjual UMKM -->
+    <div id="modalDaftarMitra" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div id="daftarBackdrop" class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity opacity-0 duration-300"></div>
+
+        <div id="daftarContent" class="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative z-10 p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-300">
+            <button id="btnCloseDaftar" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-amber-600 hover:text-white text-slate-700 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-emerald-100 rounded-2xl text-emerald-700 flex items-center justify-center text-2xl mx-auto mb-2">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900">Pendaftaran Mitra Penjual UMKM</h2>
+                <p class="text-xs text-slate-500 mt-1">Gabung bersama 1.200+ pengrajin dan kreator lokal lainnya</p>
+            </div>
+
+            <form id="mitraForm" onsubmit="handleMitraSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nama Toko / UMKM Anda *</label>
+                    <input type="text" required placeholder="Contoh: Griya Rotan Lestari" class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-emerald-600 outline-none font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Kategori Utama *</label>
+                    <select required class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-emerald-600 outline-none font-medium text-slate-800">
+                        <option value="">-- Pilih Kategori Produk --</option>
+                        <option>Kuliner & Makanan Kemasan</option>
+                        <option>Kopi, Teh & Minuman Tradisional</option>
+                        <option>Kriya, Anyaman & Kerajinan Tangan</option>
+                        <option>Fashion, Batik & Tenun</option>
+                        <option>Herbal, Kosmetik & Perawatan Alami</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Kota / Kabupaten *</label>
+                        <input type="text" required placeholder="Contoh: Jepara, Jawa Tengah" class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-emerald-600 outline-none font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nomor WhatsApp Aktif *</label>
+                        <input type="tel" required placeholder="Contoh: 08123456789" class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-emerald-600 outline-none font-medium">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ceritakan Singkat Produk & Keunikan Usaha Anda *</label>
+                    <textarea rows="3" required placeholder="Contoh: Kami memproduksi tas anyaman dari eceng gondok ramah lingkungan dan memberdayakan ibu-ibu lansia." class="w-full p-3 bg-slate-100 rounded-xl text-sm border border-transparent focus:border-emerald-600 outline-none font-medium"></textarea>
+                </div>
+
+                <div class="p-3 bg-emerald-50 rounded-xl text-xs text-emerald-800 flex items-start gap-2">
+                    <i class="fa-solid fa-circle-info text-emerald-600 mt-0.5"></i>
+                    <span>Setelah mendaftar, tim kurasi LokalKarya akan menghubungi WhatsApp Anda untuk verifikasi dan bantuan upload foto produk pertama.</span>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Kirim Pengajuan Kemitraan</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL: Story Detail Modal -->
+    <div id="modalStoryDetail" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div id="storyBackdrop" class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity opacity-0 duration-300"></div>
+
+        <div id="storyDetailContent" class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl relative z-10 p-6 sm:p-8 transform scale-95 opacity-0 transition-all duration-300 max-h-[90vh] overflow-y-auto text-slate-800">
+            <button onclick="closeStoryModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-amber-600 hover:text-white text-slate-700 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div id="storyModalImg" class="w-full h-60 rounded-2xl overflow-hidden mb-6 bg-slate-200">
+                <img src="" alt="Story Image" class="w-full h-full object-cover">
+            </div>
+
+            <div class="space-y-4">
+                <span id="storyModalTag" class="text-xs font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-full uppercase">Kisah Inspiratif</span>
+                <h2 id="storyModalTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight"></h2>
+                <p id="storyModalLocation" class="text-sm font-semibold text-amber-600 flex items-center gap-1.5"><i class="fa-solid fa-location-dot"></i> <span></span></p>
+
+                <div id="storyModalBody" class="text-slate-600 text-sm leading-relaxed space-y-3 pt-2 border-t border-slate-100">
+                    <!-- Text injected dynamically -->
+                </div>
+
+                <div class="pt-6 border-t border-slate-100 flex items-center justify-between bg-amber-50 p-4 rounded-2xl">
+                    <div>
+                        <span class="text-xs text-amber-900 block font-semibold">Dukung langsung UMKM ini:</span>
+                        <span class="text-sm font-bold text-amber-800">Beli karya mereka di LokalKarya</span>
+                    </div>
+                    <button onclick="closeStoryAndExplore()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md uppercase tracking-wider transition-all">
+                        Lihat Produk
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // MOCK DATABASE UMKM PRODUK
+        const productsData = [
+            {
+                id: 1,
+                name: "Kopi Arabika Gayo Premium 250gr",
+                umkm: "Kopi Senggani",
+                location: "Aceh",
+                region: "Sumatera",
+                category: "kopi",
+                price: 75000,
+                rating: 4.9,
+                sold: 1420,
+                image: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&w=600&q=80",
+                badge: "Terlaris",
+                desc: "Biji kopi Arabika Gayo pilihan yang ditanam di dataran tinggi Bener Meriah Aceh. Diproses semi-washed untuk menghasilkan cita rasa fruity dengan body yang tebal dan keasaman seimbang. 100% Kopi Murni tanpa campuran."
+            },
+            {
+                id: 2,
+                name: "Kain Batik Tulis Lasem Klasik Tiga Negeri",
+                umkm: "Griya Sekar Lasem",
+                location: "Rembang, Jateng",
+                region: "Jawa",
+                category: "fashion",
+                price: 450000,
+                rating: 5.0,
+                sold: 430,
+                image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80",
+                badge: "Warisan Budaya",
+                desc: "Kain batik tulis tangan asli hasil karya pengrajin Lasem. Dibuat menggunakan canting dan pewarna alami dengan motif akulturasi khas Tionghoa dan Jawa. Ukuran 2.4 meter x 1.1 meter. Nyaman dan sejuk dipakai."
+            },
+            {
+                id: 3,
+                name: "Keripik Nangka Renyah Premium Organik",
+                umkm: "Rasa Agro Malang",
+                location: "Malang, Jatim",
+                region: "Jawa",
+                category: "kuliner",
+                price: 32000,
+                rating: 4.8,
+                sold: 2850,
+                image: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80",
+                badge: "Camilan Sehat",
+                desc: "Keripik buah nangka matang pohon asli Malang. Diproses dengan teknologi vacuum frying suhu rendah menggunakan minyak kelapa murni sehingga nutrisi buah tetap terjaga, renyah, dan manis alami tanpa gula tambahan."
+            },
+            {
+                id: 4,
+                name: "Tas Anyaman Rotan Bulat Khas Bali",
+                umkm: "Rattan Ayu Craft",
+                location: "Gianyar, Bali",
+                region: "Bali-Nusa",
+                category: "kriya",
+                price: 185000,
+                rating: 4.9,
+                sold: 1950,
+                image: "https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?auto=format&fit=crop&w=600&q=80",
+                badge: "Handmade",
+                desc: "Tas rotan bundar berdiameter 20cm dengan furing kain batik asli di bagian dalam dan tali kulit sintetis kokoh. Dibuat secara tradisional dengan pengasapan sabut kelapa agar rotan awet dan tahan rayap."
+            },
+            {
+                id: 5,
+                name: "Minyak Kemiri Asli Penyubur Rambut 100ml",
+                umkm: "Herbalindo Alami",
+                location: "Yogyakarta",
+                region: "Jawa",
+                category: "herbal",
+                price: 55000,
+                rating: 4.8,
+                sold: 3100,
+                image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=600&q=80",
+                badge: "100% Alami",
+                desc: "Diekstrak dari biji kemiri bakar pilihan melalui metode cold-press. Sangat efektif merangsang pertumbuhan rambut bayi hingga dewasa, mengatasi kerontokan, serta menghitamkan uban secara alami."
+            },
+            {
+                id: 6,
+                name: "Madu Hutan Liar Sumbawa Nektar Alami 500ml",
+                umkm: "Madu Bima Lestari",
+                location: "Sumbawa, NTB",
+                region: "Bali-Nusa",
+                category: "kuliner",
+                price: 120000,
+                rating: 5.0,
+                sold: 1680,
+                image: "https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80",
+                badge: "Madu Liar",
+                desc: "Madu mentah (raw honey) langsung dipanen dari sarang lebah Apis Dorsata di pedalaman hutan Sumbawa. Mengandung bee pollen alami dan kaya antioksidan untuk meningkatkan imunitas keluarga Anda."
+            },
+            {
+                id: 7,
+                name: "Kemeja Tenun Ikat Troso Etnik Modern",
+                umkm: "Tenun Troso Jepara",
+                location: "Jepara, Jateng",
+                region: "Jawa",
+                category: "fashion",
+                price: 275000,
+                rating: 4.7,
+                sold: 840,
+                image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80",
+                badge: "Karya Tangan",
+                desc: "Kemeja pria berlengan pendek berbahan kain tenun ikat ATBM (Alat Tenun Bukan Mesin) khas desa Troso. Cutting regular fit dengan jahitan butik rapi dan furing tricot yang nyaman di kulit."
+            },
+            {
+                id: 8,
+                name: "Sambal Roa Asap Gurih Khas Manado 200gr",
+                umkm: "Dapur Oma Manado",
+                location: "Manado, Sulut",
+                region: "Sulawesi-Maluku",
+                category: "kuliner",
+                price: 40000,
+                rating: 4.9,
+                sold: 4120,
+                image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80",
+                badge: "Terlaris",
+                desc: "Perpaduan ikan roa asap suwir berlimpah dengan cabai segar dan bumbu rempah rahasia Oma. Pedasnya pas, gurih asapnya sangat menggugah selera. Cocok dimakan bersama pisang goreng atau nasi hangat."
+            },
+            {
+                id: 9,
+                name: "Vas Keramik Gerabah Hias Minimalis",
+                umkm: "Kasongan Craft",
+                location: "Bantul, Yogyakarta",
+                region: "Jawa",
+                category: "kriya",
+                price: 150000,
+                rating: 4.8,
+                sold: 520,
+                image: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80",
+                badge: "Aesthetic",
+                desc: "Vas bunga dari tanah liat berkualitas tinggi asli desa wisata Kasongan. Difinishing dengan teknik pembakaran terakota bertekstur matte alami. Membawa nuansa hangat dan estetik pada ruang tamu Anda."
+            },
+            {
+                id: 10,
+                name: "Teh Hitam Alami Kayu Aro Kerinci",
+                umkm: "Kerinci Tea Garden",
+                location: "Kerinci, Jambi",
+                region: "Sumatera",
+                category: "kopi",
+                price: 45000,
+                rating: 4.9,
+                sold: 1100,
+                image: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80",
+                badge: "Teh Organik",
+                desc: "Pucuk daun teh hitam ortodox premium dari perkebunan teh tertinggi kedua di dunia, Gunung Kerinci. Memiliki aroma khas yang harum menenangkan dengan warna seduhan keemasan yang jernih."
+            },
+            {
+                id: 11,
+                name: "Keripik Tempe Sagu Renyah Gurih",
+                umkm: "Gurih Makmur Sunda",
+                location: "Bandung, Jabar",
+                region: "Jawa",
+                category: "kuliner",
+                price: 25000,
+                rating: 4.8,
+                sold: 5200,
+                image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+                badge: "Super Renyah",
+                desc: "Inovasi keripik tempe kedelai berpadu dengan tepung sagu pilihan, diiris sangat tipis dan digoreng kering dengan bumbu ketumbar dan bawang putih asli. Renyahnya awet tahan hingga 3 bulan."
+            },
+            {
+                id: 12,
+                name: "Sepatu Kulit Handmade Asli Cibaduyut",
+                umkm: "Prabu Footwear",
+                location: "Bandung, Jabar",
+                region: "Jawa",
+                category: "fashion",
+                price: 380000,
+                rating: 4.9,
+                sold: 960,
+                image: "https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=600&q=80",
+                badge: "Kulit Sapi Asli",
+                desc: "Sepatu casual pria bermaterial 100% Genuine Cowhide Leather (Kulit Sapi Asli) olahan lokal dengan sol karet antislip yang dijahit kuat tembus ke dalam (stitching sole). Sangat awet dan bergaya berkelas."
+            }
+        ];
+
+        // STORIES DATA
+        const storiesData = {
+            sastro: {
+                title: "Mbah Sastro & Perjuangan Kopi Organik Gayo di Kaki Gunung",
+                location: "Bener Meriah, Nanggroe Aceh Darussalam",
+                img: "https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=800&q=80",
+                body: `
+                    <p>Di usianya yang telah menginjak 68 tahun, Mbah Sastro masih cekatan menyusuri lereng perkebunan kopi di ketinggian 1.400 mdpl. Bagi beliau, kopi bukan sekadar komoditas dagang, melainkan jembatan penghidupan bagi puluhan kepala keluarga di desanya.</p>
+                    <p>"Dulu kopi kami sering dihargai murah oleh tengkulak. Petani kesulitan menyekolahkan anak," kenang Mbah Sastro dengan mata berkaca-kaca.</p>
+                    <p>Sejak bergabung dengan LokalKarya 3 tahun lalu, Kopi Senggani kini mampu menjual langsung ke konsumen akhir dan kedai-kedai kopi premium di kota besar. Harga jual meningkat 60%, memungkinkan koperasi desa membeli mesin roasting modern dan membiayai beasiswa pendidikan anak-anak petani.</p>
+                `
+            },
+            hartini: {
+                title: "Ibu Hartini: Menjaga Lembaran Doa pada Batik Lasem Klasik",
+                location: "Lasem, Kabupaten Rembang, Jawa Tengah",
+                img: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
+                body: `
+                    <p>Lasem kerap dijuluki 'Tiongkok Kecil', sebuah kota pesisir tempat meleburnya harmonisasi budaya Tionghoa dan Jawa dalam setiap goresan malam pada secarik kain mori.</p>
+                    <p>Ibu Hartini (54) memimpin Griya Sekar Lasem dengan tekad mulia: memberdayakan 35 ibu rumah tangga dan lansia di desanya agar memiliki penghasilan mandiri dari rumah. "Membatik itu butuh kesabaran ekstra. Satu kain Tiga Negeri bisa memakan waktu hingga 1 bulan proses pencelupan warna," jelas Ibu Hartini.</p>
+                    <p>Melalui ekosistem digital LokalKarya, karya batik tulis Lasem yang sarat filosofi ini berhasil menjangkau kolektor wastra hingga mancanegara, memastikan tradisi luhur ini terus hidup melintasi generasi.</p>
+                `
+            },
+            suasta: {
+                title: "I Wayan Suasta: Mengubah Limbah Rotan Menjadi Karya Ekspor",
+                location: "Kabupaten Gianyar, Bali",
+                img: "https://images.unsplash.com/photo-1530651788726-1dbf58eeef1f?auto=format&fit=crop&w=800&q=80",
+                body: `
+                    <p>Melihat banyaknya sisa potongan rotan dari industri furnitur besar di Bali, I Wayan Suasta tergerak untuk melakukan upcycling. Di bengkel kerjanya yang asri di Gianyar, ia merangkul para pemuda putus sekolah untuk dilatih keterampilan menganyam.</p>
+                    <p>"Anyaman rotan Bali punya ciri khas pada kerapian dan proses pengasapan tradisional menggunakan sabut kelapa, yang memberikan aroma khas serta ketahanan luar biasa," ungkap Wayan.</p>
+                    <p>Kini Rattan Ayu Craft telah memproduksi lebih dari 1.000 item kerajinan setiap bulannya. Kehadiran LokalKarya mempertemukan Wayan dengan ratusan pembeli setia yang sangat mengapresiasi nilai kerajinan ramah lingkungan.</p>
+                `
+            }
+        };
+
+        // APPLICATION STATE
+        let activeCategory = "semua";
+        let activeRegion = "semua";
+        let searchQuery = "";
+        let currentSort = "populer";
+        let isGridView = true;
+
+        let cart = [];
+        let wishlist = JSON.parse(localStorage.getItem('lokalWishlist')) || [];
+        let activeQuickViewProduct = null;
+
+        // DOM ELEMENTS LOAD
+        document.addEventListener("DOMContentLoaded", () => {
+            initApp();
+            setupEventListeners();
+        });
+
+        function initApp() {
+            loadCartFromStorage();
+            updateWishlistBadge();
+            renderProducts();
+            setupFaqAccordions();
+        }
+
+        function setupEventListeners() {
+            // Search Input Desktop
+            const searchInput = document.getElementById("searchInput");
+            const btnSearch = document.getElementById("btnSearch");
+            if (searchInput && btnSearch) {
+                searchInput.addEventListener("input", (e) => {
+                    searchQuery = e.target.value.toLowerCase();
+                    renderProducts();
+                });
+                btnSearch.addEventListener("click", () => {
+                    renderProducts();
+                });
+            }
+
+            // Search Input Mobile
+            const searchInputMobile = document.getElementById("searchInputMobile");
+            if (searchInputMobile) {
+                searchInputMobile.addEventListener("input", (e) => {
+                    searchQuery = e.target.value.toLowerCase();
+                    renderProducts();
+                });
+            }
+
+            // Sort Select
+            const sortSelect = document.getElementById("sortSelect");
+            if (sortSelect) {
+                sortSelect.addEventListener("change", (e) => {
+                    currentSort = e.target.value;
+                    renderProducts();
+                });
+            }
+
+            // Grid / List Toggles
+            const btnGrid = document.getElementById("btnGrid");
+            const btnList = document.getElementById("btnList");
+            if (btnGrid && btnList) {
+                btnGrid.addEventListener("click", () => {
+                    isGridView = true;
+                    btnGrid.className = "p-1.5 bg-white rounded shadow-sm text-amber-600";
+                    btnList.className = "p-1.5 text-slate-600 hover:text-amber-600 rounded";
+                    renderProducts();
+                });
+                btnList.addEventListener("click", () => {
+                    isGridView = false;
+                    btnList.className = "p-1.5 bg-white rounded shadow-sm text-amber-600";
+                    btnGrid.className = "p-1.5 text-slate-600 hover:text-amber-600 rounded";
+                    renderProducts();
+                });
+            }
+
+            // Modals Toggle
+            document.getElementById("btnCartToggle").addEventListener("click", openCartDrawer);
+            document.getElementById("btnCloseCart").addEventListener("click", closeCartDrawer);
+            document.getElementById("cartBackdrop").addEventListener("click", closeCartDrawer);
+            
+            document.getElementById("btnProceedCheckout").addEventListener("click", () => {
+                if (cart.length === 0) {
+                    showToast("Keranjang Anda masih kosong!", "warning");
+                    return;
+                }
+                closeCartDrawer();
+                openCheckoutModal();
+            });
+
+            document.getElementById("btnCloseCheckout").addEventListener("click", closeCheckoutModal);
+            document.getElementById("checkoutBackdrop").addEventListener("click", closeCheckoutModal);
+
+            document.getElementById("btnDaftarMitraNav").addEventListener("click", openDaftarModal);
+            document.getElementById("btnDaftarMitraMobile").addEventListener("click", openDaftarModal);
+            document.getElementById("btnDaftarMitraBanner").addEventListener("click", openDaftarModal);
+            document.getElementById("btnCloseDaftar").addEventListener("click", closeDaftarModal);
+            document.getElementById("daftarBackdrop").addEventListener("click", closeDaftarModal);
+
+            document.getElementById("btnCloseQuickView").addEventListener("click", closeQuickView);
+            document.getElementById("quickViewBackdrop").addEventListener("click", closeQuickView);
+
+            // Quick View Qty Controls
+            document.getElementById("qvMinus").addEventListener("click", () => {
+                const el = document.getElementById("qvQty");
+                let qty = parseInt(el.innerText);
+                if (qty > 1) el.innerText = qty - 1;
+            });
+            document.getElementById("qvPlus").addEventListener("click", () => {
+                const el = document.getElementById("qvQty");
+                let qty = parseInt(el.innerText);
+                el.innerText = qty + 1;
+            });
+            document.getElementById("qvAddToCartBtn").addEventListener("click", () => {
+                if (!activeQuickViewProduct) return;
+                const qty = parseInt(document.getElementById("qvQty").innerText);
+                addToCart(activeQuickViewProduct.id, qty);
+                closeQuickView();
+            });
+            document.getElementById("qvOrderWaBtn").addEventListener("click", () => {
+                if (!activeQuickViewProduct) return;
+                const qty = parseInt(document.getElementById("qvQty").innerText);
+                orderSingleViaWhatsApp(activeQuickViewProduct, qty);
+            });
+
+            // Wishlist Toggle Nav
+            document.getElementById("btnWishlistNav").addEventListener("click", () => {
+                filterCategory('wishlist');
+                document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' });
+                showToast("Menampilkan daftar produk favorit Anda", "info");
+            });
+        }
+
+        // FILTER & RENDERING LOGIC
+        function filterCategory(cat) {
+            activeCategory = cat;
+            
+            // Update UI active buttons
+            document.querySelectorAll(".cat-btn").forEach(btn => {
+                if (btn.getAttribute("data-cat") === cat) {
+                    btn.className = "cat-btn active px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-amber-600 text-white shadow-md shadow-amber-600/20";
+                } else {
+                    btn.className = "cat-btn px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap transition-all flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700";
+                }
+            });
+
+            renderProducts();
+        }
+
+        function filterRegion(reg) {
+            activeRegion = reg;
+
+            document.querySelectorAll(".reg-btn").forEach(btn => {
+                if (btn.getAttribute("data-reg") === reg) {
+                    btn.className = "reg-btn active px-3 py-1 rounded-full font-medium bg-slate-900 text-white";
+                } else {
+                    btn.className = "reg-btn px-3 py-1 rounded-full font-medium bg-slate-100 hover:bg-slate-200 text-slate-600";
+                }
+            });
+
+            renderProducts();
+        }
+
+        function resetFilters() {
+            searchQuery = "";
+            document.getElementById("searchInput").value = "";
+            document.getElementById("searchInputMobile").value = "";
+            filterCategory("semua");
+            filterRegion("semua");
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById("productsGrid");
+            const emptyState = document.getElementById("emptyState");
+            const resultSummary = document.getElementById("resultSummary");
+
+            // Filter logic
+            let filtered = productsData.filter(p => {
+                // Category match
+                if (activeCategory === "wishlist") {
+                    if (!wishlist.includes(p.id)) return false;
+                } else if (activeCategory !== "semua" && p.category !== activeCategory) {
+                    return false;
+                }
+                
+                // Region match
+                if (activeRegion !== "semua" && p.region !== activeRegion) {
+                    return false;
+                }
+
+                // Search query match
+                if (searchQuery.trim() !== "") {
+                    const q = searchQuery.toLowerCase();
+                    const nameMatch = p.name.toLowerCase().includes(q);
+                    const umkmMatch = p.umkm.toLowerCase().includes(q);
+                    const locMatch = p.location.toLowerCase().includes(q);
+                    return nameMatch || umkmMatch || locMatch;
+                }
+
+                return true;
+            });
+
+            // Sort logic
+            if (currentSort === "populer") {
+                filtered.sort((a, b) => b.sold - a.sold);
+            } else if (currentSort === "termurah") {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (currentSort === "termahal") {
+                filtered.sort((a, b) => b.price - a.price);
+            } else if (currentSort === "terbaru") {
+                filtered.sort((a, b) => b.id - a.id);
+            }
+
+            // Update Summary Text
+            if (activeCategory === "wishlist") {
+                resultSummary.innerText = `Menampilkan ${filtered.length} produk dalam daftar keinginan (Wishlist)`;
+            } else {
+                resultSummary.innerText = `Menampilkan ${filtered.length} produk UMKM lokal`;
+            }
+
+            if (filtered.length === 0) {
+                grid.classList.add("hidden");
+                emptyState.classList.remove("hidden");
+                return;
+            } else {
+                grid.classList.remove("hidden");
+                emptyState.classList.add("hidden");
+            }
+
+            // Render Grid / List
+            if (isGridView) {
+                grid.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8";
+                grid.innerHTML = filtered.map(p => createProductCardGrid(p)).join("");
+            } else {
+                grid.className = "space-y-4 max-w-4xl mx-auto";
+                grid.innerHTML = filtered.map(p => createProductCardList(p)).join("");
+            }
+        }
+
+        function createProductCardGrid(p) {
+            const isWished = wishlist.includes(p.id);
+            const wishIcon = isWished ? "fa-solid fa-heart text-red-500" : "fa-regular fa-heart text-slate-400 hover:text-red-500";
+            const formattedPrice = formatRupiah(p.price);
+
+            return `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col justify-between group">
+                    <div class="relative overflow-hidden bg-slate-100 h-64 sm:h-72 cursor-pointer" onclick="openQuickView(${p.id})">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        
+                        <!-- Badges -->
+                        <div class="absolute top-3 left-3 flex flex-col gap-1.5">
+                            <span class="bg-amber-600/95 text-white font-bold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm backdrop-blur-sm">
+                                ${p.badge}
+                            </span>
+                        </div>
+
+                        <!-- Wishlist button floating -->
+                        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 w-9 h-9 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-md transition-transform active:scale-90" title="Simpan ke Wishlist">
+                            <i class="${wishIcon} text-base transition-colors"></i>
+                        </button>
+
+                        <div class="absolute bottom-3 left-3 right-3 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="bg-slate-900/90 text-white font-bold text-xs px-3 py-2 rounded-xl backdrop-blur-sm shadow flex items-center gap-1.5">
+                                <i class="fa-solid fa-eye text-amber-400"></i>
+                                <span>Lihat Detail</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex flex-col justify-between flex-1">
+                        <div>
+                            <!-- UMKM Name & Location -->
+                            <div class="flex items-center justify-between text-xs text-slate-500 mb-1.5 font-medium">
+                                <span class="text-amber-800 font-bold truncate max-w-[140px]"><i class="fa-solid fa-store mr-1 text-amber-600"></i>${p.umkm}</span>
+                                <span class="flex items-center gap-1 text-slate-400 shrink-0">
+                                    <i class="fa-solid fa-location-dot text-amber-500"></i>
+                                    <span>${p.location}</span>
+                                </span>
+                            </div>
+
+                            <h3 onclick="openQuickView(${p.id})" class="font-extrabold text-slate-900 text-base mb-2 hover:text-amber-600 cursor-pointer line-clamp-2 leading-snug">
+                                ${p.name}
+                            </h3>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100 mt-2">
+                            <!-- Rating & Sold info -->
+                            <div class="flex items-center justify-between mb-3 text-xs text-slate-500 font-semibold">
+                                <span class="flex items-center gap-1 text-amber-500 font-bold">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span class="text-slate-700">${p.rating}</span>
+                                </span>
+                                <span>Terjual ${p.sold}+</span>
+                            </div>
+
+                            <!-- Price and Add Button -->
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-lg font-extrabold text-amber-800">${formattedPrice}</span>
+                                <button onclick="quickAddToCart(${p.id})" class="px-3.5 py-2.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-amber-600/20 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus text-sm"></i>
+                                    <span class="hidden sm:inline">Beli</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createProductCardList(p) {
+            const isWished = wishlist.includes(p.id);
+            const wishIcon = isWished ? "fa-solid fa-heart text-red-500" : "fa-regular fa-heart text-slate-400 hover:text-red-500";
+            const formattedPrice = formatRupiah(p.price);
+
+            return `
+                <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 flex flex-col sm:flex-row items-center p-4 gap-6 group">
+                    <div class="w-full sm:w-48 h-48 rounded-2xl overflow-hidden bg-slate-100 shrink-0 relative cursor-pointer" onclick="openQuickView(${p.id})">
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-2 left-2 bg-amber-600/90 text-white font-bold text-[10px] px-2.5 py-1 rounded-md uppercase backdrop-blur-sm shadow">${p.badge}</span>
+                    </div>
+
+                    <div class="flex-1 flex flex-col justify-between w-full">
+                        <div>
+                            <div class="flex items-center justify-between mb-1 text-xs">
+                                <span class="font-bold text-amber-800"><i class="fa-solid fa-store mr-1 text-amber-600"></i>${p.umkm}</span>
+                                <span class="text-slate-400 flex items-center gap-1"><i class="fa-solid fa-location-dot text-amber-500"></i> ${p.location}</span>
+                            </div>
+                            <h3 onclick="openQuickView(${p.id})" class="text-xl font-extrabold text-slate-900 hover:text-amber-600 cursor-pointer mb-2">${p.name}</h3>
+                            <p class="text-slate-500 text-xs line-clamp-2 leading-relaxed mb-4">${p.desc}</p>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between pt-3 border-t border-slate-100 gap-4">
+                            <div class="flex items-center gap-4 text-xs font-semibold text-slate-500">
+                                <span class="flex items-center gap-1 text-amber-500 font-bold"><i class="fa-solid fa-star"></i> <span class="text-slate-700">${p.rating}</span></span>
+                                <span>Terjual ${p.sold}+</span>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <span class="text-xl font-extrabold text-amber-800">${formattedPrice}</span>
+                                <button onclick="toggleWishlist(${p.id})" class="p-2.5 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors" title="Wishlist">
+                                    <i class="${wishIcon} text-lg"></i>
+                                </button>
+                                <button onclick="quickAddToCart(${p.id})" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-md text-sm flex items-center gap-2">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                    <span>Beli Sekarang</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // CART LOGIC
+        function loadCartFromStorage() {
+            cart = JSON.parse(localStorage.getItem('lokalCart')) || [];
+            updateCartBadge();
+        }
+
+        function saveCartToStorage() {
+            localStorage.setItem('lokalCart', JSON.stringify(cart));
+            updateCartBadge();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById("cartBadgeCount");
+            const totalNav = document.getElementById("cartTotalNav");
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            if (totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.add("badge-animation");
+                setTimeout(() => badge.classList.remove("badge-animation"), 1000);
+            } else {
+                badge.innerText = "0";
+            }
+            totalNav.innerText = formatRupiah(totalPrice);
+        }
+
+        function quickAddToCart(id) {
+            addToCart(id, 1);
+        }
+
+        function addToCart(id, qty) {
+            const product = productsData.find(p => p.id === id);
+            if (!product) return;
+
+            const existingIndex = cart.findIndex(item => item.id === id);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += qty;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    umkm: product.umkm,
+                    price: product.price,
+                    image: product.image,
+                    qty: qty
+                });
+            }
+
+            saveCartToStorage();
+            showToast(`Berhasil menambahkan <strong>${product.name}</strong> ke keranjang belanja`, "success");
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            saveCartToStorage();
+            renderCartItems();
+        }
+
+        function updateCartQty(id, newQty) {
+            if (newQty <= 0) {
+                removeFromCart(id);
+                return;
+            }
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty = newQty;
+                saveCartToStorage();
+                renderCartItems();
+            }
+        }
+
+        function openCartDrawer() {
+            const drawer = document.getElementById("cartDrawer");
+            const backdrop = document.getElementById("cartBackdrop");
+            const panel = document.getElementById("cartPanel");
+
+            drawer.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+                panel.classList.remove("translate-x-full");
+                panel.classList.add("translate-x-0");
+            }, 10);
+
+            renderCartItems();
+        }
+
+        function closeCartDrawer() {
+            const drawer = document.getElementById("cartDrawer");
+            const backdrop = document.getElementById("cartBackdrop");
+            const panel = document.getElementById("cartPanel");
+
+            backdrop.classList.remove("opacity-100");
+            backdrop.classList.add("opacity-0");
+            panel.classList.remove("translate-x-0");
+            panel.classList.add("translate-x-full");
+
+            setTimeout(() => {
+                drawer.classList.add("hidden");
+            }, 300);
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById("cartItemsContainer");
+            const itemCountEl = document.getElementById("cartItemCount");
+            const subtotalEl = document.getElementById("cartSubtotal");
+            const grandTotalEl = document.getElementById("cartGrandTotal");
+            const footerEl = document.getElementById("cartFooter");
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            itemCountEl.innerText = `${totalItems} Produk terpilih`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="py-16 text-center text-slate-400">
+                        <i class="fa-solid fa-cart-shopping text-5xl mb-3"></i>
+                        <h3 class="font-bold text-slate-800 text-base">Keranjang Anda Kosong</h3>
+                        <p class="text-xs text-slate-500 mt-1">Ayo dukung UMKM dengan memilih produk lokal favorit Anda!</p>
+                        <button onclick="closeCartDrawer()" class="mt-6 px-6 py-2.5 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-md hover:bg-amber-700 transition-colors">
+                            Jelajahi Produk
+                        </button>
+                    </div>
+                `;
+                footerEl.classList.add("hidden");
+                return;
+            }
+
+            footerEl.classList.remove("hidden");
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const discount = 20000; // Promo Ongkir
+            const grandTotal = Math.max(0, subtotal - discount);
+
+            subtotalEl.innerText = formatRupiah(subtotal);
+            grandTotalEl.innerText = formatRupiah(grandTotal);
+
+            container.innerHTML = cart.map(item => `
+                <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 relative group">
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover bg-white shrink-0 shadow-sm">
+                    
+                    <div class="flex-1 min-w-0">
+                        <span class="text-[11px] font-bold text-amber-800 block truncate"><i class="fa-solid fa-store mr-1 text-amber-600"></i>${item.umkm}</span>
+                        <h4 class="font-bold text-slate-900 text-xs sm:text-sm truncate mb-1">${item.name}</h4>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="font-extrabold text-amber-800 text-sm">${formatRupiah(item.price)}</span>
+                            
+                            <!-- Qty Control -->
+                            <div class="flex items-center bg-white border border-slate-200 rounded-lg p-0.5 shadow-sm">
+                                <button onclick="updateCartQty(${item.id}, ${item.qty - 1})" class="w-7 h-7 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-100 rounded text-xs">-</button>
+                                <span class="w-8 text-center font-bold text-xs text-slate-900">${item.qty}</span>
+                                <button onclick="updateCartQty(${item.id}, ${item.qty + 1})" class="w-7 h-7 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-100 rounded text-xs">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="removeFromCart(${item.id})" class="absolute top-2 right-2 text-slate-300 hover:text-red-500 p-1.5 transition-colors" title="Hapus Item">
+                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
+                </div>
+            `).join("");
+        }
+
+        // WISHLIST LOGIC
+        function toggleWishlist(id) {
+            const index = wishlist.indexOf(id);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast("Produk dihapus dari daftar keinginan", "info");
+            } else {
+                wishlist.push(id);
+                showToast("Berhasil menyimpan ke daftar keinginan Anda!", "success");
+            }
+            localStorage.setItem('lokalWishlist', JSON.stringify(wishlist));
+            updateWishlistBadge();
+            renderProducts();
+        }
+
+        function updateWishlistBadge() {
+            const badge = document.getElementById("wishlistCount");
+            if (wishlist.length > 0) {
+                badge.innerText = wishlist.length;
+                badge.classList.remove("scale-0");
+                badge.classList.add("scale-100");
+            } else {
+                badge.classList.remove("scale-100");
+                badge.classList.add("scale-0");
+            }
+        }
+
+        // QUICK VIEW MODAL LOGIC
+        function openQuickView(id) {
+            const product = productsData.find(p => p.id === id);
+            if (!product) return;
+
+            activeQuickViewProduct = product;
+
+            // Fill content
+            document.getElementById("qvImage").src = product.image;
+            document.getElementById("qvBadge").innerText = product.badge;
+            document.getElementById("qvUmkm").innerText = product.umkm;
+            document.getElementById("qvRegionText").innerText = `${product.location} (${product.region})`;
+            document.getElementById("qvTitle").innerText = product.name;
+            document.getElementById("qvRating").innerText = product.rating;
+            document.getElementById("qvSold").innerText = `Terjual ${product.sold}+`;
+            document.getElementById("qvPrice").innerText = formatRupiah(product.price);
+            document.getElementById("qvDescription").innerText = product.desc;
+            document.getElementById("qvQty").innerText = "1";
+
+            // Open Modal
+            const modal = document.getElementById("modalQuickView");
+            const backdrop = document.getElementById("quickViewBackdrop");
+            const content = document.getElementById("quickViewContent");
+
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+                content.classList.remove("scale-95", "opacity-0");
+                content.classList.add("scale-100", "opacity-100");
+            }, 10);
+        }
+
+        function closeQuickView() {
+            const modal = document.getElementById("modalQuickView");
+            const backdrop = document.getElementById("quickViewBackdrop");
+            const content = document.getElementById("quickViewContent");
+
+            backdrop.classList.remove("opacity-100");
+            backdrop.classList.add("opacity-0");
+            content.classList.remove("scale-100", "opacity-100");
+            content.classList.add("scale-95", "opacity-0");
+
+            setTimeout(() => {
+                modal.classList.add("hidden");
+                activeQuickViewProduct = null;
+            }, 300);
+        }
+
+        // CHECKOUT SIMULATION LOGIC
+        function openCheckoutModal() {
+            const modal = document.getElementById("modalCheckout");
+            const backdrop = document.getElementById("checkoutBackdrop");
+            const content = document.getElementById("checkoutContent");
+
+            // Compute Total
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const discount = 20000;
+            const finalTotal = Math.max(0, subtotal - discount);
+
+            document.getElementById("checkoutFinalTotal").innerText = formatRupiah(finalTotal);
+            document.getElementById("checkoutQrisAmount").innerText = formatRupiah(finalTotal);
+
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+                content.classList.remove("scale-95", "opacity-0");
+                content.classList.add("scale-100", "opacity-100");
+            }, 10);
+        }
+
+        function closeCheckoutModal() {
+            const modal = document.getElementById("modalCheckout");
+            const backdrop = document.getElementById("checkoutBackdrop");
+            const content = document.getElementById("checkoutContent");
+
+            backdrop.classList.remove("opacity-100");
+            backdrop.classList.add("opacity-0");
+            content.classList.remove("scale-100", "opacity-100");
+            content.classList.add("scale-95", "opacity-0");
+
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 300);
+        }
+
+        function toggleQrisView() {
+            const method = document.getElementById("paymentMethodSelect").value;
+            const qrisBox = document.getElementById("qrisBox");
+            const transferBox = document.getElementById("transferBox");
+
+            if (method === "qris") {
+                qrisBox.classList.remove("hidden");
+                transferBox.classList.add("hidden");
+            } else if (method === "transfer") {
+                qrisBox.classList.add("hidden");
+                transferBox.classList.remove("hidden");
+            } else {
+                qrisBox.classList.add("hidden");
+                transferBox.classList.add("hidden");
+            }
+        }
+
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            
+            // Simulation payment success
+            showToast("🎉 Pesanan berhasil diproses! Terima kasih telah memajukan UMKM Indonesia.", "success");
+            
+            // Clear cart
+            cart = [];
+            saveCartToStorage();
+            closeCheckoutModal();
+
+            // Redirect / Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function checkoutViaWhatsApp() {
+            if (cart.length === 0) return;
+            
+            const formInputs = document.querySelectorAll("#checkoutForm input, #checkoutForm textarea");
+            const name = formInputs[0].value || "Pembeli LokalKarya";
+            const phone = formInputs[1].value || "-";
+            const address = formInputs[2].value || "-";
+
+            let itemListText = cart.map((item, i) => `${i+1}. ${item.name} (${item.qty}x Rp ${item.price.toLocaleString('id-ID')}) - [Mitra: ${item.umkm}]`).join("%0A");
+            
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const discount = 20000;
+            const finalTotal = Math.max(0, subtotal - discount);
+
+            const waNumber = "6281234567890"; // Admin / CS Simulation number
+            const message = `Halo Admin LokalKarya! Saya ingin memesan pesanan UMKM berikut:%0A%0A*DETAIL PEMBELI:*%0ANama: ${name}%0AWhatsApp: ${phone}%0AAlamat: ${address}%0A%0A*DAFTAR PESANAN:*%0A${itemListText}%0A%0A*TOTAL PEMBAYARAN:* Rp ${finalTotal.toLocaleString('id-ID')} (Potongan Voucher LOKALJUARA Rp 20.000)%0A%0AMohon konfirmasi pengiriman pesanan saya. Terima kasih!`;
+            
+            window.open(`https://api.whatsapp.com/send?phone=${waNumber}&text=${message}`, '_blank');
+        }
+
+        function orderSingleViaWhatsApp(product, qty) {
+            const waNumber = "6281234567890";
+            const total = product.price * qty;
+            const message = `Halo Mitra UMKM ${product.umkm}, Saya menemukan produk Anda di LokalKarya Nusantara.%0A%0ASaya ingin memesan:%0A*${product.name}*%0AJumlah: ${qty} buah%0ATotal Harga: Rp ${total.toLocaleString('id-ID')}%0A%0AMohon info ketersediaan dan pengiriman ke alamat saya. Terima kasih!`;
+            window.open(`https://api.whatsapp.com/send?phone=${waNumber}&text=${message}`, '_blank');
+        }
+
+        // MITRA DAFTAR LOGIC
+        function openDaftarModal() {
+            const modal = document.getElementById("modalDaftarMitra");
+            const backdrop = document.getElementById("daftarBackdrop");
+            const content = document.getElementById("daftarContent");
+
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+                content.classList.remove("scale-95", "opacity-0");
+                content.classList.add("scale-100", "opacity-100");
+            }, 10);
+        }
+
+        function closeDaftarModal() {
+            const modal = document.getElementById("modalDaftarMitra");
+            const backdrop = document.getElementById("daftarBackdrop");
+            const content = document.getElementById("daftarContent");
+
+            backdrop.classList.remove("opacity-100");
+            backdrop.classList.add("opacity-0");
+            content.classList.remove("scale-100", "opacity-100");
+            content.classList.add("scale-95", "opacity-0");
+
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 300);
+        }
+
+        function handleMitraSubmit(e) {
+            e.preventDefault();
+            showToast("✨ Berhasil! Pengajuan kemitraan UMKM Anda telah diterima. Tim kurator kami akan menghubungi WhatsApp Anda segera.", "success");
+            document.getElementById("mitraForm").reset();
+            closeDaftarModal();
+        }
+
+        // STORY MODAL LOGIC
+        function openStoryModal(key) {
+            const story = storiesData[key];
+            if (!story) return;
+
+            document.getElementById("storyModalImg").querySelector("img").src = story.img;
+            document.getElementById("storyModalTitle").innerText = story.title;
+            document.getElementById("storyModalLocation").querySelector("span").innerText = story.location;
+            document.getElementById("storyModalBody").innerHTML = story.body;
+
+            const modal = document.getElementById("modalStoryDetail");
+            const backdrop = document.getElementById("storyBackdrop");
+            const content = document.getElementById("storyDetailContent");
+
+            modal.classList.remove("hidden");
+            setTimeout(() => {
+                backdrop.classList.remove("opacity-0");
+                backdrop.classList.add("opacity-100");
+                content.classList.remove("scale-95", "opacity-0");
+                content.classList.add("scale-100", "opacity-100");
+            }, 10);
+        }
+
+        function closeStoryModal() {
+            const modal = document.getElementById("modalStoryDetail");
+            const backdrop = document.getElementById("storyBackdrop");
+            const content = document.getElementById("storyDetailContent");
+
+            backdrop.classList.remove("opacity-100");
+            backdrop.classList.add("opacity-0");
+            content.classList.remove("scale-100", "opacity-100");
+            content.classList.add("scale-95", "opacity-0");
+
+            setTimeout(() => {
+                modal.classList.add("hidden");
+            }, 300);
+        }
+
+        function closeStoryAndExplore() {
+            closeStoryModal();
+            document.getElementById("productsSection").scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // FAQ ACCORDION LOGIC
+        function setupFaqAccordions() {
+            document.querySelectorAll(".faq-toggle").forEach(toggle => {
+                toggle.addEventListener("click", () => {
+                    const content = toggle.nextElementSibling;
+                    const icon = toggle.querySelector("i");
+                    if (content.classList.contains("hidden")) {
+                        content.classList.remove("hidden");
+                        icon.className = "fa-solid fa-chevron-up text-amber-600";
+                    } else {
+                        content.classList.add("hidden");
+                        icon.className = "fa-solid fa-chevron-down text-slate-400";
+                    }
+                });
+            });
+        }
+
+        // UTILITIES
+        function formatRupiah(num) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            showToast("Nomor Virtual Account berhasil disalin!", "info");
+        }
+
+        function showToast(message, type = "info") {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+            
+            let bg = "bg-slate-900 text-white";
+            let icon = "fa-solid fa-circle-info text-blue-400";
+
+            if (type === "success") {
+                bg = "bg-slate-900 text-white border-l-4 border-emerald-500";
+                icon = "fa-solid fa-circle-check text-emerald-400";
+            } else if (type === "warning") {
+                bg = "bg-amber-900 text-white border-l-4 border-amber-500";
+                icon = "fa-solid fa-triangle-exclamation text-amber-400";
+            }
+
+            toast.className = `${bg} p-4 rounded-2xl shadow-2xl flex items-center gap-3 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+                <i class="${icon} text-lg shrink-0"></i>
+                <div class="text-xs sm:text-sm font-medium leading-snug flex-1">${message}</div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+                toast.classList.add("translate-y-0", "opacity-100");
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove("translate-y-0", "opacity-100");
+                toast.classList.add("translate-y-2", "opacity-0");
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
